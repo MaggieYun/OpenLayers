@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+.olControlGetCoordinate {
+  width: 200px;
+  height: 24px;
+  line-height: 24px;
+  margin: 10px 0 0 0;
+  padding: 0px;
+  position: absolute;
+  left: 20px;
+  z-index: 1000;
+}
+
+.olControlGetCoordinate li {
+  width: 100px;
+  float: left;
+  text-align: center;
+  list-style: none;
+  font-size: 12px;
+  display: inline;
+  cursor: pointer;
+  background: #D4D4D4;
+  border-style: solid solid none solid;
+  border-width: 0.2px;
+  border-color: #8DB2E3;
+}
+
+.olControlGetCoordinate .activate {
+  background: #8DB2E3;
+}

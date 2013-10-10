@@ -1,0 +1,66 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>显示Tip框</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+  </style>
+  <link href="../libs/openlayers/theme/default.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="mapDiv"></div>
+  <div id="tips">
+    <p>说明：<br>
+    1、用户可使用地图的showTip方法显示Tip框；<br>
+    2、该示例在要素的单击事件下弹出tip框；<br>
+    </p>
+  </div>
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+
+    var igate = map.addLayer({  //map.addLayer方法返回对应的动态图层
+      url: 'http://172.16.60.32:9000/rest/igate_tz/0/',
+      where: '1=1'  //该处表示默认显示全部要素
+    });
+
+
+    var getHtml = function(feature){
+      html = feature.attributes.DWMC;
+      return html;  //可返回任意html内容
+    };
+    map.bind('feature:click',function(e,event){ //在要素单击事件下弹出tip框
+        var feature = event.feature;
+        map.showTip(feature, getHtml(feature)); //showTip方法第2个参数接受任意html
+
+    });
+
+  });
+</script>
+</html>

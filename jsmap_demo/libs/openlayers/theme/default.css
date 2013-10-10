@@ -1,0 +1,182 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#viewport {
+  height: 100%;
+}
+
+#west {
+  width: 200px;
+  border: solid 1px #8DB2E3;
+  padding: 1px;
+  margin: 1px;
+}
+
+#center {
+  padding: 1px;
+  margin: 1px;
+  border: solid 1px #8DB2E3;
+}
+
+#info-header {
+  width: 100%;
+  height: 30px;
+  background: #EBF2F9;
+  text-align: center;
+}
+
+#info-header * {
+  float: left;
+  line-height: 18px;
+  height: 18px;
+  margin: 5px;
+}
+
+#info-header select {
+  width: 50px;
+  height: 18px;
+}
+
+#info-header #focus-name {
+  width: 120px;
+}
+
+.tab-nav {
+  background: #DEEEFD;
+  padding: 0px 0px 0px 0px;
+  height: 24px;
+  width: 100%;
+}
+
+.tab-nav li {
+  height: 20px;
+  width: 70px;
+  margin: 0px 0px 0px 4px;
+  padding: 3px 0px 0px 0px;
+  background: #EFF7FE;
+  border: solid 1px #9CCEFD;
+  border-bottom: none;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+}
+
+.tab-nav li.active {
+  background: #FFFFFF;
+}
+
+.tab-content {
+  position: absolute;
+  margin: 0px 0px 0px 0px;
+}
+
+.tab-content .pane {
+  display: none;
+  height: 200px;
+}
+
+.tab-content .pane.active {
+  display: block;
+}
+
+.text-overflow {
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#layerToggle{
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  z-index: 1000;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.on-ditu{
+  background: url(default/img/dt_on.jpg)
+}
+
+.on-wx{
+  background: url(default/img/wx_on.jpg)
+}
+
+.olControlEditingToolbar{
+  right: 55px;
+  top: 0;
+}
+
+.olControlEditingToolbar .olControlDrawFeatureRegularPolygonItemInactive {
+    background-color: #EBE9E4;
+    background-image:url();
+    border:solid 1px #A6A69B;
+    height: 20px;
+    width: 22px;
+}
+
+.olControlEditingToolbar .olControlDrawFeatureRegularPolygonItemActive {
+    background-color: #EFBE2A;
+    background-image:url();
+    border:solid 1px #A6A69B;
+    height: 20px;
+    width: 22px;
+}
+
+.olControlEditingToolbar .olControlMeasureItemInactive {
+    background-image:url(../map/openlayers/theme/default/img/ruler.png);
+}
+
+.olControlEditingToolbar .olControlMeasureItemActive {
+    background-image:url(../map/openlayers/theme/default/img/ruler.png);
+    border:solid 2px #EFBE2A;
+}
+
+.olControlDyLayerSelect {
+    border: solid 1px #f00;
+    cursor: pointer;
+    display: none;
+    height: 18px;
+    left: 462px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 236px;
+    width: 18px;
+    z-index: 289000000;
+}
+
+.feature-tip {
+    background-color: #FFFFD5;
+    border: 1px solid #808080;
+    cursor: inherit;
+    font: 12px arial,simsun;
+    left: 10px;
+    padding: 1px;
+    position: absolute;
+    top: -24px;
+    white-space: nowrap;
+    z-index: 80000;
+    display: none;
+}
+
+.buffer-input{
+  z-index:1010;
+  width:80px;
+  height:15px;
+  position:absolute;
+  right:60px;
+  top:30px;
+  border:solid 1px #A6A69B;
+  display:none;
+}

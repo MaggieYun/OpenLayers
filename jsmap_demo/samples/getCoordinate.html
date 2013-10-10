@@ -1,0 +1,82 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>获取坐标</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+
+  </style>
+  <link rel="stylesheet" href="../libs/openlayers/GetCoordinate.css" type="text/css">
+</head>
+<body>
+  <div id="mapDiv"></div>
+  <div id="result">
+    点位经度：<input type="text" id="output-x"><br>
+    点位纬度：<input type="text" id="output-y"><br><br>
+    线或面坐标：<input type="text" id="output-other"><br><br>
+  </div><br><br>
+  <div id="tips">
+    <p>说明：<br>
+    1、使用GetCoordinate控件，获取点坐标、线坐标或面坐标；<br>
+    2、控件可以使用默认样式（ul列表，列表项用户可通过type属性值自定义）；<br>
+    3、使用默认样式时需加载GetCoordinate.css文件；<br>
+    4、用户也可以自定义控件样式后在指定事件下调用控件的activate方法，<br>
+    activate(1)表示启用获取点坐标，<br>
+    activate(2)表示启用获取线坐标，<br>
+    activate(3)表示启用获取面坐标。</p>
+  </div>
+
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script src="../libs/openlayers/GetCoordinate.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+
+    var showcdt = function(){
+      if (arguments[0].CLASS_NAME == "OpenLayers.Geometry.Point"){
+        $('#output-x').val(arguments[0].x);
+        $('#output-y').val(arguments[0].y);
+      }else{
+        $('#output-other').val(arguments[0].toString());
+      }
+      console.log(arguments[0]);
+    };
+    
+    var GetCdtCtl = new OpenLayers.Control.GetCoordinate(map.clientLayer,{
+      types:[1,2,3],  //1：获取点坐标；2：获取线坐标；3：获取面坐标；可自由选择和搭配
+      persist:true   //表示使用该控件时绘制的点是否持续显示
+    });
+
+    GetCdtCtl.addCallback(showcdt);
+    map.map.addControls([GetCdtCtl]);
+    GetCdtCtl.ul.show()  //控件使用默认样式，用户也可自定义按钮后调用GetCdtCtl.activate()方法
+    GetCdtCtl.moveTo(new OpenLayers.Pixel(650,10)); //移动控件到地图的适当位置
+    
+  });
+</script>
+</html>

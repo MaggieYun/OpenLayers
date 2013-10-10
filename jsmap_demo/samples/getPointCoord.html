@@ -1,0 +1,76 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>获取点坐标</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+
+  </style>
+  <link rel="stylesheet" href="../libs/openlayers/GetCoordinate.css" type="text/css">
+</head>
+<body>
+  <div id="mapDiv"></div>
+  <div id="result">
+    <button type="button" id="activate">获取点坐标</button><br><br>
+    <button type="button" id="deactivate">deactivate</button><br><br>
+    点位经度：<input type="text" id="output-x"><br>
+    点位纬度：<input type="text" id="output-y"><br><br>
+  </div><br><br>
+  <div id="tips">
+    <p>说明：<br>
+    1、使用GetCoordinate控件，获取点坐标；<br>
+    2、此例中控件不使用默认样式，用户自定义一个按钮，在该按钮的单击事件下激活控件。</p>
+  </div>
+
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script src="../libs/openlayers/GetCoordinate.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+    
+    var GetCdtCtl = new OpenLayers.Control.GetCoordinate(map.clientLayer,{
+      callback:function(){
+                $('#output-x').val(arguments[0].x);
+                $('#output-y').val(arguments[0].y);
+                console.log(arguments[0]);
+              }
+    });
+
+    map.map.addControls([GetCdtCtl]);
+
+    $("#activate").click(function(){
+      GetCdtCtl.activate(1);
+    });
+
+    $("#deactivate").click(function(){
+      GetCdtCtl.deactivate();
+    });
+    
+  });
+</script>
+</html>

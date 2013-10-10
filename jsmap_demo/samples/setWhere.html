@@ -1,0 +1,61 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>过滤动态地图要素</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+  </style>
+</head>
+<body>
+  <div id="mapDiv"></div>
+  <div id="fliter">
+    请输入过滤条件：<input type="text" id="where" value="1=2">
+    <button type="button" id="setWhere">执行过滤</button><br><br>
+  </div><br><br>
+  <div id="tips">
+    <p>说明：<br>
+    1、用户可使用动态图层的setWhere方法进行过滤；<br>
+    </p>
+  </div>
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+
+    var igate = map.addLayer({  //map.addLayer方法返回对应的动态图层
+      url: 'http://172.16.60.32:9000/rest/igate_tz/0/',
+      where: '1=1'  //该处表示默认显示全部要素
+    });
+
+    $("#setWhere").click(function(){
+      where = $("#where").val();
+      igate.setWhere(where); //动态图层上有setWhere方法
+    });
+  });
+</script>
+</html>

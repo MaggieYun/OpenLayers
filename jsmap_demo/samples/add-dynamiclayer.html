@@ -1,0 +1,59 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>添加动态地图</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="mapDiv"></div>
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+
+    map.addLayer({
+      url: 'http://172.16.60.32:9000/rest/igate_tz/0/',
+      where: '1=1'
+    });
+
+    map.bind('feature:unselected',function(e,event){
+      console.log(e,event.feature);
+    });
+    
+    map.bind('feature:selected',function(e,event){
+      console.log(e,event.feature);
+    });
+    
+    map.bind('feature:click',function(e,event){
+        console.log(e,event.feature);
+    });
+
+  });
+</script>
+</html>

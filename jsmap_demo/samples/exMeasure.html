@@ -1,0 +1,90 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>量测距离和长度</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+
+  </style>
+  <link rel="stylesheet" href="../libs/openlayers/ExMeasure.css" type="text/css">
+</head>
+<body>
+  <div id="mapDiv"></div>
+  <div>
+    量测结果：<input type="text" id="output">
+
+  </div><br><br>
+  <div id="tips">
+    <p>说明：<br>
+    1、使用ExMeasure控件，进行量测距离和量测面积；<br>
+    2、控件可以使用默认样式（ul列表，列表项用户可通过type属性值自定义）；<br>
+    3、用户也可以自定义控件样式后在指定事件下调用控件的activate方法，<br>
+    activate(1)表示量测距离，<br>
+    activate(2)表示量测面积，<br>
+    </p>
+  </div>
+
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script src="../libs/openlayers/ExMeasure.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+
+    var MeasureCtl = new OpenLayers.Control.ExMeasure();
+
+    //地图上添加控件
+    map.map.addControls([MeasureCtl]);
+    //控件使用默认样式
+    MeasureCtl.ul.show();
+    //移动控件到地图的适当位置
+    MeasureCtl.moveTo(new OpenLayers.Pixel(650,10)); 
+    MeasureCtl.setPopupBackgroundColor("white"); //自定义弹出框背景颜色
+
+    var callback = function(){
+      var units = arguments[0].units;
+      var order = arguments[0].order;
+      var measure = arguments[0].measure;
+      var out = "";
+      if(order == 1) {
+          out = measure.toFixed(3) + " " + units;
+      } else {
+          out =measure.toFixed(3) + " " + units + '²';
+      }
+      $('#output').val(out);
+      console.log(arguments);
+    };
+    MeasureCtl.addCallback(callback);
+
+    $("#deactivate").click(function(){
+      MeasureCtl.deactivate();
+    });
+
+    
+  });
+</script>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>PathTrack轨迹回放控件API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: d5e7ce436666e7d4a2eeb12e7f8261dacceb3565 */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+.markdown-body img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>PathTrack轨迹回放控件API</h1>
+<h2>功能说明</h2>
+<p>该控件继承于OpenLayers.Control类，其主要功能是用于演示物体的运动轨迹。用户在给定物体运动中实际经过的点位集合后，该控件即可模拟物体运动的动画过程，用户也可选择性的设置轨迹实际运行速度等参数。该控件提供可选的可视化的UI界面，可辅助用户对轨迹回放过程中的动画进行直接的操作，包括开始、暂停、继续和结束4个按钮。</p>
+<h4>开始</h4>
+<p>不论轨迹之前是什么运动状态，轨迹都会从起始点开始运动，根据用户给定的路径（一系列点位组成）模拟实际物体运动过程。</p>
+<h4>暂停</h4>
+<p>将运动中的轨迹回放动画暂停。不论物体之前处于什么什么状态，做出暂停操作后都会立马停止运动，轨迹停留在当前状态。</p>
+<h4>继续</h4>
+<p>将暂停的轨迹回放动画继续。不论物体之前处于什么状态，做出继续操作后，轨迹就会基于先前的位置继续运动。</p>
+<h4>结束</h4>
+<p>将轨迹回放演示结束，不论轨迹之前的运动状态如何，都直接将物体的全部运动轨迹（从起点至终点）直接绘出。</p>
+<h2>主要参数说明</h2>
+<h4>sourceData</h4>
+<p>{array  &lt; object &gt; } </p>
+<p>对象组成的数组,对象包含x,y属性，x、y要求是地理坐标（小坐标） </p>
+<p>该参数是必给参数，表示物体运动轨迹原始点位集合。用户可以在实例化该控件时直接给出这个该参数值；也可以在实例化好该控件之后，通过setSourceData方法设置该参数值，在设置了该参数之后，轨迹才能正常运行。</p>
+<p>默认值为空数组：[ ]</p>
+<h4>timeInterval</h4>
+<p>{integer}单位：毫秒 
+表示在轨迹回放过程中，每次运动的时间间隔。此参数可影响轨迹回放演示过程中轨迹运动的连续性。</p>
+<p>默认值为：2000</p>
+<h4>speed</h4>
+<p>{number} 单位：米/秒
+表示物体的实际运动速度</p>
+<p>默认值为：10</p>
+<h4>speedTimes</h4>
+<p>{integer}
+该参数表示模拟速度是实际速度的多少倍</p>
+<p>默认值：10</p>
+<h4>layer</h4>
+<p>{Object  &lt;OpenLayers.Layer.Vector&gt;}
+该参数是必给参数，在实例化时，initialize方法中给出。表示该控件所作用在的图层，要求为矢量图层，便于进行轨迹绘制（矢量要素的添加）。</p>
+<h4>trackStyle</h4>
+<p>{Object}  一般类型为OpenLayers.Feature.Vector.style</p>
+<p>表示轨迹线的样式</p>
+<p>默认值为：</p>
+<pre><code>trackStyle: OpenLayers.Util.extend(
+        OpenLayers.Util.extend({},
+                OpenLayers.Feature.Vector.style['default']), 
+        {
+            fillOpacity: 1,  
+            strokeColor: &quot;red&quot;,
+            strokeWidth: 4
+        }),
+</code></pre>
+
+<h4>carStyle</h4>
+<p>{Object}  一般类型为OpenLayers.Feature.Vector.style</p>
+<p>表示轨迹头部样式（用于表示运动物体如车辆）
+默认样式为：</p>
+<pre><code>carStyle:OpenLayers.Util.extend(
+        OpenLayers.Util.extend({},
+                OpenLayers.Feature.Vector.style['default']), 
+        {
+            fillOpacity: 1,  
+            strokeColor: &quot;green&quot;,
+            strokeWidth: 2,
+            fillColor:&quot;green&quot;
+        }),
+</code></pre>
+
+<h4>afterForward</h4>
+<p>{Function}
+轨迹每向前运动一次，调用一次该方法，用户通过复写该方法，实现每一次轨迹向前后需要执行的逻辑。</p>
+<p>默认值为空函数：</p>
+<pre><code>afterForward: function() {},
+</code></pre>
+
+<p>函数的输入参数依次为：</p>
+<p>arguments[0]:当前轨迹头部要素（OpenLayers.Feature.Vector 点要素）、</p>
+<p>arguments[1]:当前轨迹线要素（OpenLayers.Feature.Vector 线要素）、</p>
+<p>arguments[2]:关键节点的序号，非关键节点则返回0(number)</p>
+<h4>end</h4>
+<p>{Function}
+轨迹运动到达终点时执行的函数。用户通过复写方法，实现在轨迹到达终点是自己需执行的操作。</p>
+<p>默认值为空函数：</p>
+<pre><code>end:function(){},
+</code></pre>
+
+<h4>distance</h4>
+<p>{integer}单位：米  初始值为0
+表示轨迹已运行的距离。一般用户不对其进行修改。</p>
+<h4>track</h4>
+<p>{Object} OpenLayers.Feature.Vector 线要素</p>
+<p>表示当前已运行的轨迹。</p>
+<h4>car</h4>
+<p>{Object} OpenLayers.Feature.Vector 点要素</p>
+<p>表示当前车辆所在的点位要素</p>
+<h2>主要方法说明</h2>
+<h4>initialize</h4>
+<p>实例化该控件
+Parameters:</p>
+<p>layer - {&lt;OpenLayers.Layer.Vector&gt;}</p>
+<p>options - 可选参数</p>
+<h4>activate</h4>
+<p>激活控件</p>
+<p>Parameters： 1到4之间的某个整数</p>
+<p>1表示开始，2表示暂停，3表示继续，4表示结束</p>
+<p>Returns: {Boolean} </p>
+<p>返回该控件是否处于激活状态</p>
+<h4>deactivate</h4>
+<p>使控件处于非激活状态。</p>
+<p>Returns: {Boolean} </p>
+<p>返回该控件是否处于激活状态，调用该方法时，图层上相关轨迹的要素会全部被删除清空，部分相关参数也会回到初始值。</p>
+<h4>setSourceData</h4>
+<p>为该控件设置物体运动轨迹点位的集合</p>
+<p>Parameters:{Array &lt; object &gt; } 对象组成的数组 对象包含x,y属性， x、y为地理坐标（4326）</p>
+<h4>setTimeInterval</h4>
+<p>设置轨迹运动的时间间隔</p>
+<p>Parameters:{integer}单位：毫秒  </p>
+<h4>setSpeedTimes</h4>
+<p>设置模拟运行速度是实际速度的多少倍</p>
+<p>Parameters:{integer} 模拟速度是实际速度的倍数</p>
+<h4>setSpeed</h4>
+<p>设置轨迹实际运行的速度</p>
+<p>Parameters:{number} 单位：米/秒</p>
+<h4>setTrackStyle</h4>
+<p>设置轨迹样式
+Parameters:{object} 样式对象</p>
+<h4>setCarStyle</h4>
+<p>设置轨迹头部样式</p>
+<p>Parameters:{object} 样式对象</p>
+<h4>draw</h4>
+<p>Parameters： px - {&lt;OpenLayers.Pixel&gt;} </p>
+<p>控件左上角位置的像素值或者为null。</p>
+<h2>其他说明</h2>
+<h4>依赖问题</h4>
+<p>该控件类依赖于OpenLayers.LinearFunc类</p>
+<h4>输入输出坐标问题</h4>
+<p>在该控件中涉及到的输入输出坐标全部为地理坐标（4326），小坐标。</p>
+<h4>UI界面问题</h4>
+<ul>
+<li>
+<p>若用户不需要使用该控件自带的UI界面，则不需做任何处理，可在自己设计的按钮上调用该控件的不同方法，activate(1)：开始，activate(2)：暂停，activate(3)：继续，activate(4)：结束。</p>
+</li>
+<li>
+<p>若用户需要使用该控件自带的UI界面，需另外加载PathTrack.css文件，假设实例化后得到的控件名为PathTrackCtl，需特别写一句代码：</p>
+<pre><code>PathTrackCtl.ul.show();
+</code></pre>
+
+</li>
+</ul>
+<h4>控件版本问题</h4>
+<p>该控件有两个版本：</p>
+<ul>
+<li>
+<p>V1.0,对原始关键节点不做特殊处理。</p>
+</li>
+<li>
+<p>V2.0,轨迹在回放演示时，原始点位节点必停顿，用户可以监听得到，但该版本。</p>
+</li>
+</ul>
+<h4>SVN地址</h4>
+<p>总文件夹所在svn地址
+<a href="https://172.16.60.31/svn/Repo/1.Code/gis/ygs_js_api" title="svn目录地址">https://172.16.60.31/svn/Repo/1.Code/gis/ygs<em>js</em>api</a></p>
+<p>PathTrack.js脚本地址
+<a href="https://172.16.60.31/svn/Repo/1.Code/gis/ygs_js_api/examples/extend/PathTrack.js" title="PathTrack.js脚本地址">https://172.16.60.31/svn/Repo/1.Code/gis/ygs<em>js</em>api/examples/extend/PathTrack.js</a></p>
+<p>PathTrack.css脚本地址
+<a href="https://172.16.60.31/svn/Repo/1.Code/gis/ygs_js_api/examples/extend/PathTrack.css" title="PathTrack.css的SVN地址">https://172.16.60.31/svn/Repo/1.Code/gis/ygs<em>js</em>api/examples/extend/PathTrack.css</a></p>
+<p>LinearFunc.js脚本地址
+<a href="https://172.16.60.31/svn/Repo/1.Code/gis/ygs_js_api/examples/extend/LinearFunc.js" title="LinearFunc.js脚本的SVN地址">https://172.16.60.31/svn/Repo/1.Code/gis/ygs<em>js</em>api/examples/extend/LinearFunc.js</a></p>
+<p>控件示例地址
+<a href="https://172.16.60.31/svn/Repo/1.Code/gis/ygs_js_api/examples/extendSelectFeatureCtl.html" title="控件示例页面">https://172.16.60.31/svn/Repo/1.Code/gis/ygs<em>js</em>api/examples/extendSelectFeatureCtl.html</a></p>
+<p>32服务器上控件示例页面地址
+<a href="http://172.16.60.32/zyxu/ygs_js_api/examples/extendSelectFeatureCtl.html" title="控件示例页面">http://172.16.60.32/zyxu/ygs<em>js</em>api/examples/extendSelectFeatureCtl.html</a></p>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

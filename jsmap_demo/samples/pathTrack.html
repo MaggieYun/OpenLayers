@@ -1,0 +1,135 @@
+<doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>轨迹回放</title>
+  <style>
+    #mapDiv{
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+
+  </style>
+  <link rel="stylesheet" href="../libs/openlayers/PathTrack.css" type="text/css">
+</head>
+<body>
+  <div id="mapDiv"></div>
+  <div id="tips">
+    <p>说明：<br>
+    1、使用PathTrack控件，进行轨迹回放演示；<br>
+    2、控件可以使用默认样式（ul列表，列表项用户可通过type属性值自定义）；<br>
+    3、用户也可以自定义控件样式后在指定事件下调用控件的activate方法，<br>
+    activate(1)表示开始，<br>
+    activate(2)表示暂停，<br>
+    activate(3)表示继续，<br>
+    activate(4)表示结束。<br>
+    4、提醒作者：控件自身非重要缺陷：eventListeners不起作用？样式及节点样式实现方式有待改进<br>
+    </p>
+  </div>
+
+</body>
+<script src="../libs/geoSetup.js"></script>
+<script src="../libs/jquery.js"></script>
+<script src="../libs/openlayers/OpenLayers.js"></script>
+<script src="../libs/openlayers/ExDyLayer2.js"></script>
+<script src="../libs/openlayers/ExSelectFeature2.js"></script>
+<script src="../libs/openlayers/GMapLayer.js"></script>
+<script src="../libs/openlayers/PGisLayer.js"></script>
+<script src="../libs/javascript.util.js"></script>
+<script src="../libs/jsts.js"></script>
+<script src="../libs/openlayers/iMap.js"></script>
+<script src="../libs/openlayers/LinearFunc.js"></script>
+<script src="../libs/openlayers/PathTrack.js"></script>
+<script>
+  $(function(){
+    //设置地区 320500为苏州 
+    //设置坐标系 PGIS or gmap
+    GeoSetup.setLocation('320500','PGIS');
+    
+    //注意前缀「pgis@」标识底图类型
+    var base_url = 'pgis@http://172.16.64.24:8888/tiles';
+
+    var map = $('#mapDiv').iMap({
+      bases: [base_url],
+      extent: GeoSetup.getExtent()//获取地图范围
+    });
+
+    //全局变量，PGIS地图坐标系为4326，GMAP为102113
+    MAP_SR = '4326'  
+    //定义一个样式，用于表示轨迹头部，使用一辆小车的图标
+    var carStyle = OpenLayers.Util.extend(OpenLayers.Util.extend({},
+                          OpenLayers.Feature.Vector.style['default']), {
+                              graphic : true,
+                              graphicOpacity : 1,
+                              externalGraphic : "../resources/images/car.png",
+                              graphicWidth : 20
+                    });
+
+    //实例化一个轨迹回放的控件
+    var PathTrackCtl = new OpenLayers.Control.PathTrack(map.clientLayer,{
+      carStyle:carStyle,
+      speed:50,
+      timeInterval:500,//毫秒单位
+      end:function(){    //到达终点后的回调函数
+        console.log("结束到终点");
+      }   
+    });
+    //地图上添加控件
+    map.map.addControls([PathTrackCtl]);
+    //控件使用默认样式
+    PathTrackCtl.ul.show();
+    //移动控件到地图的适当位置
+    PathTrackCtl.moveTo(new OpenLayers.Pixel(650,10)); 
+
+    var style = OpenLayers.Util.extend(
+                              OpenLayers.Util.extend({},
+                                  OpenLayers.Feature.Vector.style['default']), 
+                              {
+                                fillOpacity: 0,  
+                                strokeColor: "green",
+                                strokeWidth: 2,
+                                fillColor:"green",
+                                pointRadius:10,
+                                label:"${label}"  //由要素的attribute:"label"决定
+                              });
+    var styleMap = new OpenLayers.StyleMap(style);
+    //重新设置了map.clientLayer的styleMap，该图层上所有的点都将由此styleMap决定
+    //若不希望影响clientLayer上其他要素的样式，可实例化一个OpenLayers.Layer.Vector实例传递给PathTrackCtl
+    map.clientLayer.styleMap = styleMap; 
+
+
+    //存放用户在afterForward事件下添加的要素
+    var vertexFts = []; 
+    //复写通过每节点处的回调函数
+    PathTrackCtl.afterForward = function(){
+      //注意：控件输入输出皆为小坐标，使用gmap地图时需要转换该坐标
+      var car = arguments[0]  
+      if(arguments[2]){//返回关键节点的序号，非关键节点返回0
+        if(arguments[2] == 1){ //删除先前添加的节点要素
+          PathTrackCtl.layer.removeFeatures(vertexFts);
+        }
+        var vertexFt = new OpenLayers.Feature.Vector(car.geometry,{label:arguments[2].toString()});
+        PathTrackCtl.layer.addFeatures([vertexFt]);
+        vertexFts.push(vertexFt);
+      } 
+      //判断是否需要移动地图中心点
+      var extent = map.map.getExtent();
+      if(!extent.contains(car.geometry.x,car.geometry.y)){
+        map.map.setCenter([car.geometry.x,car.geometry.y]);
+      }
+    };
+
+    //模拟一系列轨迹经过的点位数据,该数据为包含x、y属性的对象组成的数组，x、y要求为小坐标
+    var source_points =   
+         [{x:120.61125,y:31.16309},
+         {x:120.58196,y:31.21290},
+         {x:120.62297,y:31.24561},
+         {x:120.62053,y:31.30225},
+         {x:120.72991,y:31.29346},
+         {x:120.81829,y:31.28614}];
+    PathTrackCtl.setSourceData(source_points);
+
+  });
+</script>
+</html>
